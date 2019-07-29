@@ -1,0 +1,172 @@
+import os
+from glob import glob
+import pandas as pd
+import csv
+
+PATH = "C:\\Users\\Hamza\\Desktop\\weatherfiles"
+EXT = "*.csv"
+#path assign of per file 
+all_csv_files = [] # all path in it
+for path, subdir, files in os.walk(PATH):
+    for file in glob(os.path.join(path, EXT)):
+        all_csv_files.append(file)
+        #print(all_csv_files)
+        
+class weather:
+    date=[]
+    maxtemp=[]
+    mintemp=[]
+    humidity=[]
+    date2=[]
+    Month=[]
+    maxvaluewithinput=[] # Max TemperatureC Column data in it
+    minvaluewithinput=[] # Min TemperatureC Column in it
+    maxhumvaluewithinput=[] #Max Humidity column in it
+    for x in all_csv_files:
+        with open(x, newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                #print(row)
+                date.append(row.get('PKT') or row.get('PKST'))
+                maxtemp.append(row.get('Max TemperatureC'))
+                mintemp.append(row.get('Min TemperatureC'))
+                humidity.append(row.get('Max Humidity'))
+                
+    def datedata(self,f):
+        y=0
+        for x in self.date:
+            da=x.split("-") or x.split("/")
+            year=da[0]
+            #month=da[1]
+            #print(year)
+            #print(da[1]+"/"+da[2]+"/"+year)
+            if year==f:
+                #print("y="+str(y))
+                if self.maxtemp[y] != "":
+                    #print(da[2])
+                    self.date2.append(da[2])
+                    self.Month.append(da[1])
+                    self.maxvaluewithinput.append(int(self.maxtemp[y]))
+                    if self.mintemp[y] != "":
+                        self.minvaluewithinput.append(int(self.mintemp[y])) 
+                        if self.humidity[y] != "":
+                            self.maxhumvaluewithinput.append(int(self.humidity[y]))
+                    y=y+1
+                else:
+                    y=y+1
+            else:
+                y=y+1
+            #print("MaxTemperature: "+str(self.maxvaluewithinput))
+            #print("Mintemperature: "+str(self.minvaluewithinput))
+            #print("Humidity: "+str(self.maxhumvaluewithinput))
+            #else:
+             #   y=y+1
+        #print(minvaluewithinput)
+        #print(self.date2)
+        maxnumber=max(self.maxvaluewithinput)
+        minnumber=min(self.minvaluewithinput)
+        maxhumi=max(self.maxhumvaluewithinput)
+        return (maxnumber, minnumber,maxhumi)
+    
+
+
+#Calculation of Highest Lowest Temperature and Humidty
+
+    #function for finding maximum temperature
+
+    def maxvalues(self,z,maxnumber):
+        for x in self.maxvaluewithinput:
+            if x==maxnumber:
+                print('Maximum temperature is: '+str(maxnumber)+" C "+' on the date of: '+self.date2[z]+' on the Month: '+self.Month[z])
+                break
+            z=z+1
+        
+
+    #function for finding lowest temperature
+
+    def minvalues(self,z,minnumber):
+        for x in self.minvaluewithinput:
+            if x==minnumber:
+                print('Lowest temperature is: '+str(minnumber)+" C "+' on the date of: '+self.date2[z]+' on the Month: '+self.Month[z])
+                break
+            z=z+1
+    
+
+    #function for finding humidity
+    
+
+    def humidty(self,z,maxhumi):
+        for x in self.maxhumvaluewithinput:
+            if x==maxhumi:
+                print('Humidty is: '+str(maxhumi)+" % "+' on the date of: '+self.date2[z]+' on the Month: '+self.Month[z])
+                break 
+            z=z+1          
+             
+    #Average CalCulations
+    
+    #average maximum temperature
+                
+    def averagetemp(self,y,num,maxnumber):
+        for x in self.maxvaluewithinput:
+            if x==maxnumber:
+                y=y+1
+                num=num+maxnumber
+        #print("Maxnum"+str(num))
+        #print("Maxnum"+str(y))
+        averagetemp=num/y
+        print("Average  Max temperature: "+str(averagetemp)+"C")
+        
+    #average minimum temperature
+        
+    def averagemintemp(self,y,num,minnumber):
+        for x in self.minvaluewithinput:
+            if x==minnumber:
+                #print(x)
+                y=y+1
+                num=num+minnumber
+        averagetemp=num/y
+        print("Average  Min temperature: "+str(averagetemp)+"C")
+       
+    #average humidity
+    
+    def averagehum(self,y,num,maxhumi):
+        for x in self.maxhumvaluewithinput:
+            if x==maxhumi:
+                y=y+1
+                num=num+maxhumi
+        averagehum=num/y
+        print("Average  Min Humidity: "+str(averagehum)+"%")
+
+            
+
+    
+    #main for calling all the functions
+def main():
+    a,b=0,0
+    name = input("Enter a name: ")
+    years=['2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016']
+    for x in years:
+        if x==name:
+            emp1=weather()
+            maxnumber, minnumber,maxhumi= emp1.datedata(name)
+            emp1.maxvalues(a,maxnumber)
+            emp1.minvalues(a,minnumber)
+            emp1.humidty(a,maxhumi)
+            emp1.averagetemp(a,b,maxnumber)
+            emp1.averagemintemp(a,b,minnumber)
+            emp1.averagehum(a,b,maxhumi)  
+        elif name<"2004" or name>"2016":
+            print("You enter wrong Input")
+            break
+    
+    
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+
+
+
